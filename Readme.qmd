@@ -42,11 +42,7 @@ execute:
   warning: false
   message: false
 
-format:
-  html:
-    code-fold: true
-
-
+format: gfm
 
 # Cross-referencing for figures/tables/equations
 crossref:
