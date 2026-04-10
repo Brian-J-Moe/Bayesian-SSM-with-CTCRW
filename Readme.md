@@ -86,14 +86,13 @@ The bathymetric surface map downloaded from the National Ocean and
 Atmespheric Administration Digital Coast database. We use the Nation
 Center for Environemntal Information continuously updated digital
 elevation model (CUDEM) which mapped the bathymetric surface at a ninth
-arch-second resolution (3m) ([Cooperative Institute for Research in
-Environmental Sciences (CIRES) at the University of Colorado, Boulder
-2014](#ref-cudem_data); [Amante et al. 2023](#ref-cudem)). To account
-for uncertainty of animal positions and the prediction error of the GAM
-used to estimate animal HPEm, the bathymetric surface was smoothed to a
-5m resultion using a Gaussian kernel. Spatial depth gradients were
-calculated using the finite differences method with the R package
-`terra` ([Hijmans et al. 2026](#ref-terra)).
+arch-second resolution (3m) ([CIRES 2014](#ref-cudem_data); [Amante et
+al. 2023](#ref-cudem)). To account for uncertainty of animal positions
+and the prediction error of the GAM used to estimate animal HPEm, the
+bathymetric surface was smoothed to a 5m resultion using a Gaussian
+kernel. Spatial depth gradients were calculated using the finite
+differences method with the R package `terra` ([Hijmans et al.
+2026](#ref-terra)).
 
 ### Discrete-time state transition
 
@@ -116,11 +115,9 @@ doi:[10.3390/rs15061702](https://doi.org/10.3390/rs15061702).
 
 <div id="ref-cudem_data" class="csl-entry">
 
-Cooperative Institute for Research in Environmental Sciences (CIRES) at
-the University of Colorado, Boulder. 2014. Continuously updated digital
-elevation model (CUDEM) – 1/9 arc-second resolution
-bathymetric-topographic tiles. NOAA National Centers for Environmental
-Information.
+CIRES. 2014. Continuously updated digital elevation model (CUDEM) – 1/9
+arc-second resolution bathymetric-topographic tiles. NOAA National
+Centers for Environmental Information.
 doi:[10.25921/ds9v-ky35](https://doi.org/10.25921/ds9v-ky35).
 
 </div>
