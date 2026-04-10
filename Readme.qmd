@@ -4,34 +4,10 @@ title: "Bayesian State-Space Model with Continuous Time Correlated Random Walk"
 
 # shorttitle: 
 
-author:
-  - name: "Brian J. Moe"
-    email: "brian.moe@myfwc.com"
-    corresponding: true
-    affiliations:
-      - ref: affil1
 
-affiliations:
-  - id: affil1
-    name: "Fish and Wildlife Research Institute, Florida Fish and Wildlife Conservation Commission"
-    address: "585 Prineville Street"
-    city: "Port Charlotte"
-    state: "Florida"
-    country: "USA"
-    postal-code: "33954"
-
-filters:
-  - authors-block
   
 abstract: |
    
-
-keywords:
-  - nursery
-  - acoustic telemetry
-  - VPS
-  - CTCRW
-  - endangered
 
 bibliography: references.bib
 csl: canadian-journal-of-fisheries-and-aquatic-sciences.csl

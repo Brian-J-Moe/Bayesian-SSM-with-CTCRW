@@ -1,11 +1,5 @@
 # Bayesian State-Space Model with Continuous Time Correlated Random Walk
-Brian J. Moe
 
-<sup>1</sup> Fish and Wildlife Research Institute, Florida Fish and
-Wildlife Conservation Commission
-
-<sup>✉</sup> Correspondence: [Brian J. Moe
-\<brian.moe@myfwc.com\>](mailto:brian.moe@myfwc.com)
 
 
 
