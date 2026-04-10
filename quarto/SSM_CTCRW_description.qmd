@@ -1,0 +1,129 @@
+---
+title: "Bayesian State-Space Model with Continuous Time Correlated Random Walk"
+
+
+# A short running title you can copy into the manuscript if the journal asks for it
+# shorttitle: 
+
+author:
+  - name: "Brian J. Moe"
+    orcid: "0000-0000-0000-0000"
+    email: "brian.moe@myfwc.com"
+    corresponding: true
+    affiliations:
+      - ref: affil1
+
+affiliations:
+  - id: affil1
+    name: "Fish and Wildlife Research Institute, Florida Fish and Wildlife Conservation Commission"
+    address: "585 Prineville Street"
+    city: "Port Charlotte"
+    state: "Florida"
+    country: "USA"
+    postal-code: "33954"
+
+filters:
+  - authors-block
+  
+abstract: |
+   
+
+keywords:
+  - nursery
+  - acoustic telemetry
+  - VPS
+  - CTCRW
+  - endangered
+
+bibliography: references.bib
+csl: canadian-journal-of-fisheries-and-aquatic-sciences.csl
+link-citations: true
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+format:
+  docx:
+    reference-doc: cjfas_word_reference.docx
+    number-sections: true
+
+
+
+# Cross-referencing for figures/tables/equations
+crossref:
+  fig-title: "Fig."
+  tbl-title: "Table"
+  eq-title: "Eq."
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(data.table)
+library(ggplot2)
+library(patchwork)
+library(gt)
+library(knitr)
+```
+
+{{< pagebreak >}}
+
+
+
+## Movement model
+
+Using a hierarchical Bayesian state-space model (BSSM) implementing a continuous-time correlated random walk (CTCRW), we can model the latent movement process as a function of velocity (speed and direction) through continuous time with autocorrelation of consecutive velocity states [@michelot_blackwell_2019; @michelot_etal_2019].
+
+### Process model
+
+The continuous-time process model for individual $i$ follows an Orstein-Ulenbeck process with an additive drift force:
+
+$$
+dV_i(t) = \left[-\beta_iV_i(t) + f(\textbf{x}, t)\right]dt + \sigma_idW(t)
+$$ {#eq-process}
+
+where $V_i(t)$ is the velocity of individual $i$ at time $t$, $\beta_i$ is the velocity autocorrelation decay rate, $\sigma_i$ is the velocity diffusion coefficient, $W(t)$ is the standard Weiner process, and $f(\textbf{x}, t)$ is a position- and time-dependent drift force. Position changes as:
+
+$$
+dX_i(t)=V_i(t)dt
+$$ {#eq-position}
+
+### Drift specification
+
+The drift force comprises three additive components representing behavioral thermoregulation, depth preference, and creek refuge attraction:
+
+$$
+f(\textbf{x}, t) = f_{temp} + f_{depth} + f_{creek}
+$$ {#eq-drift}
+
+The thermal drift force was was modeled as a bidirectional restoring force:
+
+$$
+f_{temp} = \alpha\left(T_{opt} - T(\textbf{x},t) \right) \cdot \nabla T(\textbf{x}, t)
+$$ {#eq-tempf}
+
+where $\alpha$ is the strength of the thermoregulatory response, $T_{opt}$ is the temperature at which no thermal drift occurs, and $\nabla T(\textbf{x}, t)$ is the spatiotemporal temperature gradient. Temperature gradients were estimated by building temperature maps from the means of hourly recorded temperatures at each receiver. Temperatures at points between receivers were interpolated using the Kriging method with the `gstat` R package [@gstat].
+
+The depth drift was modeled as a restoring force with ontogenetic shift:
+
+$$
+f_{depth} = \omega (D_{pref}(age_t)-D(\textbf{x}, t)) \cdot \nabla D(\textbf{x})
+$$ {#eq-depthf}
+
+$$
+D_{pref}(age_t) = d_\infty - (d_\infty - d_0) e^{-\kappa_d age_i}
+$$ {#eq-depthpref}
+
+where $\omega$ is the strength of depth-seeking behavior, $D(\textbf{x}, t)$ is the tidally-adjusted water depth at position $\textbf{x}$ and time $t$, $\nabla D(\textbf{x})$ is the spatial gradient of the bathymetric surface, $D_{pref}(age_t)$ is the age-dependent depth preference, $d_0$ is the depth preference of neonatal individuals, $d_\infty$ is the asymptotic depth preference of large juveniles and adults within the Glover Bight system, $\kappa_d$ is the rate of change of ontogenetic depth preference, and $age_t$ is the estimated age at time $t$ .
+
+The bathymetric surface map downloaded from the National Ocean and Atmespheric Administration Digital Coast database. We use the Nation Center for Environemntal Information continuously updated digital elevation model (CUDEM) which mapped the bathymetric surface at a ninth arch-second resolution (3m) [@cudem; @cudem_data]. To account for uncertainty of animal positions and the prediction error of the GAM used to estimate animal HPEm, the bathymetric surface was smoothed to a 5m resultion using a Gaussian kernel. Spatial depth gradients were calculated using the finite differences method with the R package `terra` [@terra].
+
+### Discrete-time state transition
+
+### Hierarchical structure
+
+
+# References
