@@ -2,12 +2,10 @@
 title: "Bayesian State-Space Model with Continuous Time Correlated Random Walk"
 
 
-# A short running title you can copy into the manuscript if the journal asks for it
 # shorttitle: 
 
 author:
   - name: "Brian J. Moe"
-    orcid: "0000-0000-0000-0000"
     email: "brian.moe@myfwc.com"
     corresponding: true
     affiliations:
@@ -45,9 +43,8 @@ execute:
   message: false
 
 format:
-  docx:
-    reference-doc: cjfas_word_reference.docx
-    number-sections: true
+  html:
+    code-fold: true
 
 
 
