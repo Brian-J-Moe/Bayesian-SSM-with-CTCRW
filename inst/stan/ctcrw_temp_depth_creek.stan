@@ -1,5 +1,8 @@
 /*=============================================================================
- * Bayesian CTCRW State-Space Model with a linear restorative force
+ * Bayesian CTCRW State-Space Model with a: 
+ * linear temperature restorative force
+ * asymptotic depth preference force as a function of age
+ * logistic predation refuge attraction force as a function of length
  *=============================================================================*/
 
 

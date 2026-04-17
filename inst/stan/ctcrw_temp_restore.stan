@@ -1,5 +1,5 @@
 /*=============================================================================
- * Bayesian CTCRW State-Space Model with a linear restorative force
+ * Bayesian CTCRW State-Space Model with a linear temperature restorative force
  *=============================================================================*/
 
 
