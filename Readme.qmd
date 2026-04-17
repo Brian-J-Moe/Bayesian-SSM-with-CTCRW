@@ -1,6 +1,5 @@
 ---
-title: "Following the Drift"
-subtitle: "A Bayesian state-space CTCRW with environmental forcing and refuge attraction"
+title: "Following the Drift: A Bayesian state-space CTCRW with environmental forcing and refuge attraction"
 
 # shorttitle: 
 
@@ -18,7 +17,9 @@ execute:
   warning: false
   message: false
 
-format: gfm
+format: 
+  gfm:
+    wrap: none
 
 # Cross-referencing for figures/tables/equations
 crossref:
