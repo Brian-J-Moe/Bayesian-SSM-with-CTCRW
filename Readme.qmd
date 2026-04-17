@@ -1,6 +1,6 @@
 ---
-title: "Following the Drift: A Bayesian state-space CTCRW with environmental forcing and refuge attraction"
-
+title: "Following the Drift"
+subtitle: "A Bayesian state-space CTCRW with environmental forcing and refuge attraction"
 
 # shorttitle: 
 
