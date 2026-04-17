@@ -8,14 +8,20 @@
 Using a hierarchical Bayesian state-space model (BSSM) implementing a
 continuous-time correlated random walk (CTCRW), we can model the latent
 movement process as a function of velocity (speed and direction) through
-continuous time with autocorrelation of consecutive velocity states
-([Michelot et al. 2019](#ref-michelot_etal_2019); [Michelot and
-Blackwell 2019](#ref-michelot_blackwell_2019)).
+continuous time ([Michelot et al. 2019](#ref-michelot_etal_2019);
+[Michelot and Blackwell 2019](#ref-michelot_blackwell_2019)). The CTCRW
+model assumes velocities over a given time interval are correlated to
+the that of the previous time interval. In other words, speed and
+directional movement tend to persist through time. The velocity process
+is governed by a velocity autocorrelation decay rate which defines how
+quickly autocorrelation decays over time and a velocity diffusion
+coefficient which describes the spread of velocity around the global
+velocity mean (which is assumed to be zero).
 
 ### Process model
 
-The continuous-time process model for individual $i$ follows an
-Orstein-Ulenbeck process with an additive drift force:
+The velocity model for individual $i$ follows an Orstein-Ulenbeck
+process with an additive drift force:
 
 <span id="eq-process">$$
 dV_i(t) = \left[-\beta_iV_i(t) + f(\textbf{x}, t)\right]dt + \sigma_idW(t)
@@ -24,8 +30,8 @@ dV_i(t) = \left[-\beta_iV_i(t) + f(\textbf{x}, t)\right]dt + \sigma_idW(t)
 where $V_i(t)$ is the velocity of individual $i$ at time $t$, $\beta_i$
 is the velocity autocorrelation decay rate, $\sigma_i$ is the velocity
 diffusion coefficient, $W(t)$ is the standard Weiner process, and
-$f(\textbf{x}, t)$ is a position- and time-dependent drift force.
-Position changes as:
+$f(\textbf{x}, t)$ is a position- and time-dependent drift force. From
+this, position changes as:
 
 <span id="eq-position">$$
 dX_i(t)=V_i(t)dt
@@ -77,13 +83,13 @@ the rate of change of ontogenetic depth preference, and $age_t$ is the
 estimated age at time $t$ .
 
 The bathymetric surface map downloaded from the National Ocean and
-Atmespheric Administration Digital Coast database. We use the Nation
+Atmospheric Administration Digital Coast database. We use the Nation
 Center for Environemntal Information continuously updated digital
 elevation model (CUDEM) which mapped the bathymetric surface at a ninth
 arch-second resolution (3m) ([CIRES 2014](#ref-cudem_data); [Amante et
 al. 2023](#ref-cudem)). To account for uncertainty of animal positions
 and the prediction error of the GAM used to estimate animal HPEm, the
-bathymetric surface was smoothed to a 5m resultion using a Gaussian
+bathymetric surface was smoothed to a 5m resolution using a Gaussian
 kernel. Spatial depth gradients were calculated using the finite
 differences method with the R package `terra` ([Hijmans et al.
 2026](#ref-terra)).
@@ -91,6 +97,41 @@ differences method with the R package `terra` ([Hijmans et al.
 ### Discrete-time state transition
 
 ### Hierarchical structure
+
+To account for individual variation, we modeled the individual specific
+parameters $\beta_i$ and $\sigma_i$ hierarchically on the log scale:
+
+<span id="eq-global_beta">$$
+\text{ln}\beta_i = \text{ln}\mu_\beta + \tau_\beta z_i^{(\beta)}, \quad z_i^{(\beta)} \sim \mathcal{N}(0, 1),
+ \qquad(7)$$</span>
+
+<span id="eq-global_sigma">$$
+\text{ln}\sigma_i = \text{ln}\mu_\sigma + \tau_\sigma z_i^{(\sigma)}, \quad z_i^{(\sigma)} \sim \mathcal{N}(0, 1).
+ \qquad(8)$$</span>
+
+Where $\mu_\beta$ and $\mu_\sigma$ are population level medians of
+$\beta_i$ and $\sigma_i$, respectively, and $\tau_\beta$ and
+$\tau_\sigma$ are among-individual standard deviations on the log scale.
+
+The population level hyperparameters were given the priors
+
+$$
+\text{ln}\mu_\beta \sim \mathcal{N}(\text{ln}\widetilde{\beta}, \beta_{sd}),
+$$
+
+$$
+\text{ln}\mu_\sigma \sim \mathcal{N}(\text{ln}\widetilde{\sigma}, \sigma_{sd}),
+$$ $$
+\tau_\beta \sim \text{Exponential}(\lambda), \quad \tau_\sigma \sim \text{Exponential}(\lambda).
+$$
+
+Where $\widetilde{\beta}$ and $\widetilde{\sigma}$ are the specified
+prior medians, $\beta_{sd}$ and $\sigma_{sd}$ are the prior standard
+deviations, and $\lambda$ is the prior exponential rate. Continuous
+tracks were partitioned into independent segments based on intervals
+longer than 30 minutes. All segments of a given individual share that
+individuals movement parameters, allowing repeated segments to inform
+the same hierarchical random effects.
 
 # References
 
