@@ -60,7 +60,7 @@ $\nabla T(\textbf{x}, t)$ is the spatiotemporal temperature gradient.
 Temperature gradients were estimated by building temperature maps from
 the means of hourly recorded temperatures at each receiver. Temperatures
 at points between receivers were interpolated using the Kriging method
-with the `gstat` R package ([Pebesma 2004](#ref-gstat)).
+with the `gstat` R package ([Gräler et al. 2016](#ref-gstat)).
 
 The depth drift was modeled as a restoring force with ontogenetic shift:
 
@@ -168,11 +168,20 @@ Available from <https://github.com/stan-dev/cmdstanr>.
 
 </div>
 
+<div id="ref-gstat" class="csl-entry">
+
+Gräler, B., Pebesma, E., and Heuvelink, G. 2016. Spatio-temporal
+interpolation using <span class="nocase">gstat</span>. The R Journal
+**8**: 204–218. Available from
+<https://journal.r-project.org/articles/RJ-2016-014/index.html>.
+
+</div>
+
 <div id="ref-terra" class="csl-entry">
 
 Hijmans, R.J., Brown, A., and Barbosa, M. 2026.
-<span class="nocase">terra</span>: Spatial data analysis. Available from
-<https://github.com/rspatial/terra>.
+<span class="nocase">terra</span>: Spatial data analysis.
+doi:[10.32614/CRAN.package.terra](https://doi.org/10.32614/CRAN.package.terra).
 
 </div>
 
@@ -192,15 +201,6 @@ The Langevin diffusion as a continuous-time model of animal movement and
 habitat selection. Methods in ecology and evolution **10**(11):
 1894–1907.
 doi:[10.1111/2041-210X.13154](https://doi.org/10.1111/2041-210X.13154).
-
-</div>
-
-<div id="ref-gstat" class="csl-entry">
-
-Pebesma, E.J. 2004. Multivariable geostatistics in S: The
-<span class="nocase">gstat</span> package. Computers & Geosciences
-**30**: 683–691.
-doi:[10.1016/j.cageo.2004.03.012](https://doi.org/10.1016/j.cageo.2004.03.012).
 
 </div>
 
