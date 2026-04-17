@@ -1,5 +1,5 @@
 ---
-title: "Bayesian State-Space Model with Continuous Time Correlated Random Walk"
+title: "Following the Drift: A Bayesian state-space CTCRW with environmental forcing and refuge attraction"
 
 
 # shorttitle: 

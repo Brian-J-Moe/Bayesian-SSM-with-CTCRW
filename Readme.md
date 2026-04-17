@@ -1,4 +1,5 @@
-# Bayesian State-Space Model with Continuous Time Correlated Random Walk
+# Following the Drift: A Bayesian state-space CTCRW with environmental
+forcing and refuge attraction
 
 
 
