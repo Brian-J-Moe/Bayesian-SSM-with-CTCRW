@@ -133,6 +133,9 @@ longer than 30 minutes. All segments of a given individual share that
 individuals movement parameters, allowing repeated segments to inform
 the same hierarchical random effects.
 
+Models were build in Stan ([Stan developement Team 2025](#ref-stan))
+using the R package `cmdstanr` ([Gabry et al. 2025](#ref-cmdstanr)).
+
 # References
 
 <div id="refs" class="references csl-bib-body hanging-indent"
@@ -157,10 +160,19 @@ doi:[10.25921/ds9v-ky35](https://doi.org/10.25921/ds9v-ky35).
 
 </div>
 
+<div id="ref-cmdstanr" class="csl-entry">
+
+Gabry, J., Češnovar, R., Johnson, A., and Bronder, S. 2025.
+<span class="nocase">cmdstanr</span>: R interface to ’CmdStan’.
+Available from <https://github.com/stan-dev/cmdstanr>.
+
+</div>
+
 <div id="ref-terra" class="csl-entry">
 
-Hijmans, R.J., Brown, A., and Barbosa, M. 2026. Terra: Spatial data
-analysis. Available from <https://github.com/rspatial/terra>.
+Hijmans, R.J., Brown, A., and Barbosa, M. 2026.
+<span class="nocase">terra</span>: Spatial data analysis. Available from
+<https://github.com/rspatial/terra>.
 
 </div>
 
@@ -168,24 +180,34 @@ analysis. Available from <https://github.com/rspatial/terra>.
 
 Michelot, T., and Blackwell, P.G. 2019. State-switching continuous-time
 correlated random walks. Methods in Ecology and Evolution **10**(5):
-637–649. Wiley Online Library.
+637–649.
+doi:[10.1111/2041-210X.13275](https://doi.org/10.1111/2041-210X.13275).
 
 </div>
 
 <div id="ref-michelot_etal_2019" class="csl-entry">
 
 Michelot, T., Gloaguen, P., Blackwell, P.G., and Étienne, M.-P. 2019.
-The langevin diffusion as a continuous-time model of animal movement and
+The Langevin diffusion as a continuous-time model of animal movement and
 habitat selection. Methods in ecology and evolution **10**(11):
-1894–1907. Wiley Online Library.
+1894–1907.
+doi:[10.1111/2041-210X.13154](https://doi.org/10.1111/2041-210X.13154).
 
 </div>
 
 <div id="ref-gstat" class="csl-entry">
 
-Pebesma, E.J. 2004. Multivariable geostatistics in S: The gstat package.
-Computers & Geosciences **30**: 683–691. Available from
-<https://doi.org/10.1016/j.cageo.2004.03.012>.
+Pebesma, E.J. 2004. Multivariable geostatistics in S: The
+<span class="nocase">gstat</span> package. Computers & Geosciences
+**30**: 683–691.
+doi:[10.1016/j.cageo.2004.03.012](https://doi.org/10.1016/j.cageo.2004.03.012).
+
+</div>
+
+<div id="ref-stan" class="csl-entry">
+
+Stan developement Team. 2025. Stan modeling language users guide and
+reference manual. Available from <https://mc-stan.org/docs/2_38/>.
 
 </div>
 

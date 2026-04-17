@@ -125,4 +125,6 @@ $$
 
 Where $\widetilde{\beta}$ and $\widetilde{\sigma}$ are the specified prior medians, $\beta_{sd}$ and $\sigma_{sd}$ are the prior standard deviations, and $\lambda$ is the prior exponential rate. Continuous tracks were partitioned into independent segments based on intervals longer than 30 minutes. All segments of a given individual share that individuals movement parameters, allowing repeated segments to inform the same hierarchical random effects.
 
+Models were build in Stan [@stan] using the R package `cmdstanr` [@cmdstanr]. 
+
 # References
