@@ -1,4 +1,4 @@
-# Following the Drift: A Bayesian state-space CTCRW with environmental drift and refuge attraction
+# Following the Drift: A Bayesian state-space CTCRW with environmental drivers and refuge attraction
 
 
 
