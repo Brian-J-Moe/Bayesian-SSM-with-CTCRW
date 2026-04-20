@@ -53,19 +53,19 @@ D_{pref}(age_t) = d_\infty - (d_\infty - d_0) e^{-\kappa_d age_i}
 
 where $\omega$ is the strength of depth-seeking behavior, $D(\textbf{x}, t)$ is the tidally-adjusted water depth at position $\textbf{x}$ and time $t$, $\nabla D(\textbf{x})$ is the spatial gradient of the bathymetric surface, $D_{pref}(age_t)$ is the age-dependent depth preference, $d_0$ is the depth preference of neonatal individuals, $d_\infty$ is the asymptotic depth preference of large juveniles and adults within the Glover Bight system, $\kappa_d$ is the rate of change of ontogenetic depth preference, and $age_t$ is the estimated age at time $t$ .
 
-The bathymetric surface map downloaded from the National Ocean and Atmospheric Administration Digital Coast database. We use the Nation Center for Environemntal Information continuously updated digital elevation model (CUDEM) which mapped the bathymetric surface at a ninth arch-second resolution (3m) ([CIRES 2014](#ref-cudem_data); [Amante et al. 2023](#ref-cudem)). To account for uncertainty of animal positions and the prediction error of the GAM used to estimate animal HPEm, the bathymetric surface was smoothed to a 5m resolution using a Gaussian kernel. Spatial depth gradients were calculated using the finite differences method with the R package `terra` ([Hijmans et al. 2026](#ref-terra)).
+The bathymetric surface map downloaded from the National Ocean and Atmospheric Administration Digital Coast database. We use the Nation Center for Environmental Information continuously updated digital elevation model (CUDEM) which mapped the bathymetric surface at a ninth arch-second resolution (3m) ([CIRES 2014](#ref-cudem_data); [Amante et al. 2023](#ref-cudem)). To account for uncertainty of animal positions and the prediction error of the GAM used to estimate animal HPEm, the bathymetric surface was smoothed to a 5m resolution using a Gaussian kernel. Spatial depth gradients were calculated using the finite differences method with the R package `terra` ([Hijmans et al. 2026](#ref-terra)).
 
 #### Creek refuge attraction with size-dependent decay
 
 Glover Bight Creek acts as a refuge from bull shark predation for yoy and small individuals. Attraction to the creek refuge was modeled as a length-dependent logistic decay:
 
-$$
+<span id="eq-creekf">$$
 f_{creek} = \psi \cdot \omega(L_t) \cdot \nabla\tilde{C}(\text{x}),
-$$ {#eq_creekf}
+ \qquad(7)$$</span>
 
-$$
+<span id="eq-creekLogis">$$
 \omega (L_t) = \frac{1}{1 + \text{exp}[\kappa_c(L_t - L_{50})]}
-$$ {#eq_creekLogis}
+ \qquad(8)$$</span>
 
 where $\psi$ is the strength of creek attraction, $\nabla\tilde{C}(\text{x})$ is the gradient of a softplus-clamped signed distance field pointing toward the creek interior, $\omega(L_t)$ is a logistic weight which decays with length $L_t$ at time $t$, $L_{50}$ is the length at which creek affinity halves (the inflection of the curve), and $\kappa_c$ describes the steepness of the transition. The signed distance field was clamped using a softplus transformation $\tilde{C} = k^{-1}\text{ln}(1+e^{kC})$ to prevent inward drift for animals already inside the creek.
 
@@ -77,11 +77,11 @@ To account for individual variation, we modeled the individual specific paramete
 
 <span id="eq-global_beta">$$
 \text{ln}\beta_i = \text{ln}\mu_\beta + \tau_\beta z_i^{(\beta)}, \quad z_i^{(\beta)} \sim \mathcal{N}(0, 1),
- \qquad(7)$$</span>
+ \qquad(9)$$</span>
 
 <span id="eq-global_sigma">$$
 \text{ln}\sigma_i = \text{ln}\mu_\sigma + \tau_\sigma z_i^{(\sigma)}, \quad z_i^{(\sigma)} \sim \mathcal{N}(0, 1).
- \qquad(8)$$</span>
+ \qquad(10)$$</span>
 
 Where $\mu_\beta$ and $\mu_\sigma$ are population level medians of $\beta_i$ and $\sigma_i$, respectively, and $\tau_\beta$ and $\tau_\sigma$ are among-individual standard deviations on the log scale.
 
