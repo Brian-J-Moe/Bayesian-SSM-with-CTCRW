@@ -31,7 +31,7 @@ The drift force comprises three additive components representing behavioral ther
 f(\textbf{x}, t) = f_{temp} + f_{depth} + f_{creek}
  \qquad(3)$$</span>
 
-#### Thermal restoring force
+#### *Thermal restoring force*
 
 The thermal drift force was was modeled as a bidirectional restoring force:
 
@@ -41,7 +41,7 @@ f_{temp} = \alpha\left(T_{opt} - T(\textbf{x},t) \right) \cdot \nabla T(\textbf{
 
 where $\alpha$ is the strength of the thermoregulatory response, $T_{opt}$ is the temperature at which no thermal drift occurs, and $\nabla T(\textbf{x}, t)$ is the spatiotemporal temperature gradient. Temperature gradients were estimated by building temperature maps from the means of hourly recorded temperatures at each receiver. Temperatures at points between receivers were interpolated using the Kriging method with the `gstat` R package ([Gräler et al. 2016](#ref-gstat)).
 
-#### Depth restoring force with ontogenetic shift
+#### *Depth restoring force with ontogenetic shift*
 
 The depth drift was modeled as a restoring force with ontogenetic shift:
 
@@ -57,7 +57,7 @@ where $\omega$ is the strength of depth-seeking behavior, $D(\textbf{x}, t)$ is 
 
 The bathymetric surface map downloaded from the National Ocean and Atmospheric Administration Digital Coast database. We use the Nation Center for Environmental Information continuously updated digital elevation model (CUDEM) which mapped the bathymetric surface at a ninth arch-second resolution (3m) ([CIRES 2014](#ref-cudem_data); [Amante et al. 2023](#ref-cudem)). To account for uncertainty of animal positions and the prediction error of the GAM used to estimate animal HPEm, the bathymetric surface was smoothed to a 5m resolution using a Gaussian kernel. Spatial depth gradients were calculated using the finite differences method with the R package `terra` ([Hijmans et al. 2026](#ref-terra)).
 
-#### Creek refuge attraction with size-dependent decay
+#### *Creek refuge attraction with size-dependent decay*
 
 Glover Bight Creek acts as a refuge from bull shark predation for yoy and small individuals. Attraction to the creek refuge was modeled as a length-dependent logistic decay:
 
@@ -73,7 +73,7 @@ where $\psi$ is the strength of creek attraction, $\nabla\tilde{C}(\text{x})$ is
 
 ### Discrete-time state transition
 
-#### Hierarchical structure
+#### *Hierarchical structure*
 
 To account for individual variation, we modeled the individual specific parameters $\beta_i$ and $\sigma_i$ hierarchically on the log scale:
 
