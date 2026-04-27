@@ -9,7 +9,7 @@
 
 Using a hierarchical Bayesian state-space model (BSSM) implementing a continuous-time correlated random walk (CTCRW), we can model the latent movement process as a function of velocity (speed and direction) through continuous time ([Michelot et al. 2019](#ref-michelot_etal_2019); [Michelot and Blackwell 2019](#ref-michelot_blackwell_2019)). The CTCRW model assumes velocities over a given time interval are correlated to the that of the previous time interval. In other words, speed and directional movement tend to persist through time. The velocity process is governed by a velocity autocorrelation decay rate which defines how quickly autocorrelation decays over time and a velocity diffusion coefficient which describes the spread of velocity around the global velocity mean (which is assumed to be zero).
 
-#### Process model
+### Process model
 
 The velocity model for individual $i$ follows an Orstein-Ulenbeck process with an additive drift force:
 
@@ -23,7 +23,7 @@ where $V_i(t)$ is the velocity of individual $i$ at time $t$, $\beta_i$ is the v
 dX_i(t)=V_i(t)dt
  \qquad(2)$$</span>
 
-#### Drift specification
+### Drift specification
 
 The drift force comprises three additive components representing behavioral thermoregulation, depth preference, and creek refuge attraction:
 
@@ -31,7 +31,7 @@ The drift force comprises three additive components representing behavioral ther
 f(\textbf{x}, t) = f_{temp} + f_{depth} + f_{creek}
  \qquad(3)$$</span>
 
-###### Thermal restoring force
+#### Thermal restoring force
 
 The thermal drift force was was modeled as a bidirectional restoring force:
 
@@ -41,7 +41,7 @@ f_{temp} = \alpha\left(T_{opt} - T(\textbf{x},t) \right) \cdot \nabla T(\textbf{
 
 where $\alpha$ is the strength of the thermoregulatory response, $T_{opt}$ is the temperature at which no thermal drift occurs, and $\nabla T(\textbf{x}, t)$ is the spatiotemporal temperature gradient. Temperature gradients were estimated by building temperature maps from the means of hourly recorded temperatures at each receiver. Temperatures at points between receivers were interpolated using the Kriging method with the `gstat` R package ([Gräler et al. 2016](#ref-gstat)).
 
-###### Depth restoring force with ontogenetic shift
+#### Depth restoring force with ontogenetic shift
 
 The depth drift was modeled as a restoring force with ontogenetic shift:
 
@@ -57,7 +57,7 @@ where $\omega$ is the strength of depth-seeking behavior, $D(\textbf{x}, t)$ is 
 
 The bathymetric surface map downloaded from the National Ocean and Atmospheric Administration Digital Coast database. We use the Nation Center for Environmental Information continuously updated digital elevation model (CUDEM) which mapped the bathymetric surface at a ninth arch-second resolution (3m) ([CIRES 2014](#ref-cudem_data); [Amante et al. 2023](#ref-cudem)). To account for uncertainty of animal positions and the prediction error of the GAM used to estimate animal HPEm, the bathymetric surface was smoothed to a 5m resolution using a Gaussian kernel. Spatial depth gradients were calculated using the finite differences method with the R package `terra` ([Hijmans et al. 2026](#ref-terra)).
 
-###### Creek refuge attraction with size-dependent decay
+#### Creek refuge attraction with size-dependent decay
 
 Glover Bight Creek acts as a refuge from bull shark predation for yoy and small individuals. Attraction to the creek refuge was modeled as a length-dependent logistic decay:
 
@@ -71,7 +71,7 @@ f_{creek} = \psi \cdot \omega(L_t) \cdot \nabla\tilde{C}(\text{x}),
 
 where $\psi$ is the strength of creek attraction, $\nabla\tilde{C}(\text{x})$ is the gradient of a softplus-clamped signed distance field pointing toward the creek interior, $\omega(L_t)$ is a logistic weight which decays with length $L_t$ at time $t$, $L_{50}$ is the length at which creek affinity halves (the inflection of the curve), and $\kappa_c$ describes the steepness of the transition. The signed distance field was clamped using a softplus transformation $\tilde{C} = k^{-1}\text{ln}(1+e^{kC})$ to prevent inward drift for animals already inside the creek.
 
-#### Discrete-time state transition
+### Discrete-time state transition
 
 #### Hierarchical structure
 
@@ -103,7 +103,7 @@ Where $\widetilde{\beta}$ and $\widetilde{\sigma}$ are the specified prior media
 
 Models were build in Stan ([Stan developement Team 2025](#ref-stan)) using the R package `cmdstanr` ([Gabry et al. 2025](#ref-cmdstanr)).
 
-# References
+## References
 
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 
