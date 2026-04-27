@@ -1,12 +1,11 @@
+# Following the Drift
 
 
 
 
-# Following the Drift
+# *A Bayesian state-space continuous-time correlated random walk with environmental drivers and refuge attraction*
 
-## A Bayesian state-space continuous-time correlated random walk with environmental drivers and refuge attraction
-
-### Movement model
+## Movement model
 
 Using a hierarchical Bayesian state-space model (BSSM) implementing a continuous-time correlated random walk (CTCRW), we can model the latent movement process as a function of velocity (speed and direction) through continuous time ([Michelot et al. 2019](#ref-michelot_etal_2019); [Michelot and Blackwell 2019](#ref-michelot_blackwell_2019)). The CTCRW model assumes velocities over a given time interval are correlated to the that of the previous time interval. In other words, speed and directional movement tend to persist through time. The velocity process is governed by a velocity autocorrelation decay rate which defines how quickly autocorrelation decays over time and a velocity diffusion coefficient which describes the spread of velocity around the global velocity mean (which is assumed to be zero).
 
