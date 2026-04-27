@@ -1,13 +1,4 @@
 ---
-title: "Following the Drift: A Bayesian state-space CTCRW with environmental drivers and refuge attraction"
-
-# shorttitle: 
-
-
-  
-abstract: |
-   
-
 bibliography: references.bib
 csl: canadian-journal-of-fisheries-and-aquatic-sciences.csl
 link-citations: true
@@ -41,13 +32,15 @@ library(knitr)
 
 {{< pagebreak >}}
 
+# Following the Drift
 
+## A Bayesian state-space continuous-time correlated random walk with environmental drivers and refuge attraction
 
-## Movement model
+### Movement model
 
-Using a hierarchical Bayesian state-space model (BSSM) implementing a continuous-time correlated random walk (CTCRW), we can model the latent movement process as a function of velocity (speed and direction) through continuous time [@michelot_blackwell_2019; @michelot_etal_2019]. The CTCRW model assumes velocities over a given time interval are correlated to the that of the previous time interval. In other words,  speed and directional movement tend to persist through time. The velocity process is governed by a velocity autocorrelation decay rate which defines how quickly autocorrelation decays over time and a velocity diffusion coefficient which describes the spread of velocity around the global velocity mean (which is assumed to be zero). 
+Using a hierarchical Bayesian state-space model (BSSM) implementing a continuous-time correlated random walk (CTCRW), we can model the latent movement process as a function of velocity (speed and direction) through continuous time [@michelot_blackwell_2019; @michelot_etal_2019]. The CTCRW model assumes velocities over a given time interval are correlated to the that of the previous time interval. In other words, speed and directional movement tend to persist through time. The velocity process is governed by a velocity autocorrelation decay rate which defines how quickly autocorrelation decays over time and a velocity diffusion coefficient which describes the spread of velocity around the global velocity mean (which is assumed to be zero).
 
-### Process model
+#### Process model
 
 The velocity model for individual $i$ follows an Orstein-Ulenbeck process with an additive drift force:
 
@@ -61,9 +54,7 @@ $$
 dX_i(t)=V_i(t)dt
 $$ {#eq-position}
 
-
-
-### Drift specification
+#### Drift specification
 
 The drift force comprises three additive components representing behavioral thermoregulation, depth preference, and creek refuge attraction:
 
@@ -71,7 +62,7 @@ $$
 f(\textbf{x}, t) = f_{temp} + f_{depth} + f_{creek}
 $$ {#eq-drift}
 
-#### Thermal restoring force
+###### Thermal restoring force
 
 The thermal drift force was was modeled as a bidirectional restoring force:
 
@@ -81,7 +72,7 @@ $$ {#eq-tempf}
 
 where $\alpha$ is the strength of the thermoregulatory response, $T_{opt}$ is the temperature at which no thermal drift occurs, and $\nabla T(\textbf{x}, t)$ is the spatiotemporal temperature gradient. Temperature gradients were estimated by building temperature maps from the means of hourly recorded temperatures at each receiver. Temperatures at points between receivers were interpolated using the Kriging method with the `gstat` R package [@gstat].
 
-#### Depth restoring force with ontogenetic shift
+###### Depth restoring force with ontogenetic shift
 
 The depth drift was modeled as a restoring force with ontogenetic shift:
 
@@ -97,7 +88,7 @@ where $\omega$ is the strength of depth-seeking behavior, $D(\textbf{x}, t)$ is 
 
 The bathymetric surface map downloaded from the National Ocean and Atmospheric Administration Digital Coast database. We use the Nation Center for Environmental Information continuously updated digital elevation model (CUDEM) which mapped the bathymetric surface at a ninth arch-second resolution (3m) [@cudem; @cudem_data]. To account for uncertainty of animal positions and the prediction error of the GAM used to estimate animal HPEm, the bathymetric surface was smoothed to a 5m resolution using a Gaussian kernel. Spatial depth gradients were calculated using the finite differences method with the R package `terra` [@terra].
 
-#### Creek refuge attraction with size-dependent decay
+###### Creek refuge attraction with size-dependent decay
 
 Glover Bight Creek acts as a refuge from bull shark predation for yoy and small individuals. Attraction to the creek refuge was modeled as a length-dependent logistic decay:
 
@@ -111,12 +102,9 @@ $$ {#eq-creekLogis}
 
 where $\psi$ is the strength of creek attraction, $\nabla\tilde{C}(\text{x})$ is the gradient of a softplus-clamped signed distance field pointing toward the creek interior, $\omega(L_t)$ is a logistic weight which decays with length $L_t$ at time $t$, $L_{50}$ is the length at which creek affinity halves (the inflection of the curve), and $\kappa_c$ describes the steepness of the transition. The signed distance field was clamped using a softplus transformation $\tilde{C} = k^{-1}\text{ln}(1+e^{kC})$ to prevent inward drift for animals already inside the creek.
 
+#### Discrete-time state transition
 
-### Discrete-time state transition
-
-
-
-### Hierarchical structure
+#### Hierarchical structure
 
 To account for individual variation, we modeled the individual specific parameters $\beta_i$ and $\sigma_i$ hierarchically on the log scale:
 
@@ -138,13 +126,12 @@ $$
 
 $$
 \text{ln}\mu_\sigma \sim \mathcal{N}(\text{ln}\widetilde{\sigma}, s_\sigma),
-$$
-$$
+$$ $$
 \tau_\beta \sim \text{Exponential}(\lambda_\tau), \quad \tau_\sigma \sim \text{Exponential}(\lambda_\tau).
 $$
 
 Where $\widetilde{\beta}$ and $\widetilde{\sigma}$ are the specified prior medians, $s_\beta$ and $s_\sigma$ are the prior standard deviations, and $\lambda_tau$ is the prior exponential rate. Continuous tracks were partitioned into independent segments based on intervals longer than 30 minutes. All segments of a given individual share that individuals movement parameters, allowing repeated segments to inform the same hierarchical random effects.
 
-Models were build in Stan [@stan] using the R package `cmdstanr` [@cmdstanr]. 
+Models were build in Stan [@stan] using the R package `cmdstanr` [@cmdstanr].
 
 # References
