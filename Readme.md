@@ -39,7 +39,7 @@ The thermal drift force was was modeled as a bidirectional restoring force:
 f_{temp} = \alpha\left(T_{opt} - T(\textbf{x},t) \right) \cdot \nabla T(\textbf{x}, t)
  \qquad(4)$$</span>
 
-where $\alpha$ is the strength of the thermoregulatory response, $T_{opt}$ is the temperature at which no thermal drift occurs, and $\nabla T(\textbf{x}, t)$ is the spatiotemporal temperature gradient. Temperature gradients were estimated by building temperature maps from the means of hourly recorded temperatures at each receiver. Temperatures at points between receivers were interpolated using the Kriging method with the `gstat` R package ([Gräler et al. 2016](#ref-gstat)).
+where $T(\textbf{x},t)$ is the temperature at position $\mathbf{x}$ and time $t$, $\alpha$ is the strength of the thermoregulatory response, $T_{opt}$ is the temperature at which no thermal drift occurs, and $\nabla T(\textbf{x}, t)$ is the spatiotemporal temperature gradient. Temperature gradients were estimated by building temperature maps from the means of hourly recorded temperatures at each receiver. Temperatures at points between receivers were interpolated using the Kriging method with the `gstat` R package ([Gräler et al. 2016](#ref-gstat)).
 
 #### *Depth restoring force with ontogenetic shift*
 
@@ -73,17 +73,78 @@ where $\psi$ is the strength of creek attraction, $\nabla\tilde{C}(\text{x})$ is
 
 ### Discrete-time state transition
 
+The state vector can be defined as $\textbf{z}_t = [x_t, v_t]$ where $x_t$ and $v_t$ are the position and velocity at time $t$. The continuous-time process was integrated over the intervals $\Delta (t)$ to estimate the state vector at time $t+1$ so that:
+
+<span id="eq-transition">$$
+\textbf{z}_{t+1} = \textbf{A}(\Delta t)\textbf{z}_t + \textbf{B}(\Delta t)\textbf{z}_t + \eta_t
+ \qquad(9)$$</span>
+
+<span id="eq-trans_matrices">$$
+\textbf{A} = 
+\begin{bmatrix}
+1 & a \\
+0 & b
+\end{bmatrix}
+, \quad
+\textbf{B} = 
+\begin{bmatrix}
+c \\ a
+\end{bmatrix}
+ \qquad(10)$$</span>
+
+with
+
+<span id="eq-trans_inputs">$$
+a = \frac{1-e^{-\beta \Delta t}}{\beta}, \quad 
+b = e^{-\beta \Delta t}, \quad 
+c = \frac{\beta \Delta t + e^{-\beta \Delta t} - 1}{\beta^2}
+ \qquad(11)$$</span>
+
+and the process noise $\eta_t \sim \mathcal{N}(0, \textbf{Q}(\Delta t))$. The process noise covariance matrix $\textbf{Q}(\Delta t)$ is defined as:
+
+<span id="eq-process_cov">$$
+\mathbf{Q}\Delta t = 
+\begin{bmatrix}
+Q_{11} & Q_{12} \\
+Q_{21} & Q_{22}
+\end{bmatrix},
+ \qquad(12)$$</span>
+
+<span id="eq-velvar">$$ 
+Q_{22} = \frac{\sigma^2}{2\beta} \left(1 - e^{-2\beta \Delta t} \right)
+ \qquad(13)$$</span>
+
+<span id="eq-cov">$$
+Q_{12} = \frac{\sigma^2}{2 \beta^2} \left(1 - e^{-\beta \delta t} \right)^2
+ \qquad(14)$$</span>
+
+<span id="eq-posvar">$$
+Q_{11} = \frac{\sigma^2}{\beta^3} \left( \beta \Delta t - 2 \left( 1-e^{-\beta \Delta t} \right) + \frac{1}{2} \left( 1-e^{-2\beta\Delta t} \right) \right)
+ \qquad(15)$$</span>
+
+where $Q_{22}$ is the velocity process variance which is describes how much uncertainty in velocity accumulates over the interval $\Delta t$, $Q_{11}$ is the position process variance describing the effect velocity noise has on positional uncertainty, and $Q_{12}$ is the covariance between position and velocity diffusion.
+
+To estimate the positions and velocities of the latent states, Kalman filtering was used ([Michelot et al. 2019](#ref-michelot_etal_2019)).
+
+#### *Observation model*
+
+The observed positions $y_t$ were estimated with error $\varepsilon_t$:
+
+<span id="eq-obs">$$
+y_t = x_t + \varepsilon_t, \quad \varepsilon_t \sim \mathcal{N}\left(0, \hat{h}_t^2 \right)
+ \qquad(16)$$</span> where $\hat{h}_t^2$ is the horizontal positional error predicted from a GAM of VPS system-state variables.
+
 #### *Hierarchical structure*
 
-To account for individual variation, we modeled the individual specific parameters $\beta_i$ and $\sigma_i$ hierarchically on the log scale:
+To account for between-individual variation, we modeled the individual specific parameters $\beta_i$ and $\sigma_i$ hierarchically on the log scale:
 
 <span id="eq-global_beta">$$
 \text{ln}\beta_i = \text{ln}\mu_\beta + \tau_\beta z_i^{(\beta)}, \quad z_i^{(\beta)} \sim \mathcal{N}(0, 1),
- \qquad(9)$$</span>
+ \qquad(17)$$</span>
 
 <span id="eq-global_sigma">$$
 \text{ln}\sigma_i = \text{ln}\mu_\sigma + \tau_\sigma z_i^{(\sigma)}, \quad z_i^{(\sigma)} \sim \mathcal{N}(0, 1).
- \qquad(10)$$</span>
+ \qquad(18)$$</span>
 
 Where $\mu_\beta$ and $\mu_\sigma$ are population level medians of $\beta_i$ and $\sigma_i$, respectively, and $\tau_\beta$ and $\tau_\sigma$ are among-individual standard deviations on the log scale.
 
@@ -99,7 +160,7 @@ $$ $$
 \tau_\beta \sim \text{Exponential}(\lambda_\tau), \quad \tau_\sigma \sim \text{Exponential}(\lambda_\tau).
 $$
 
-Where $\widetilde{\beta}$ and $\widetilde{\sigma}$ are the specified prior medians, $s_\beta$ and $s_\sigma$ are the prior standard deviations, and $\lambda_tau$ is the prior exponential rate. Continuous tracks were partitioned into independent segments based on intervals longer than 30 minutes. All segments of a given individual share that individuals movement parameters, allowing repeated segments to inform the same hierarchical random effects.
+Where $\widetilde{\beta}$ and $\widetilde{\sigma}$ are the specified prior medians, $s_\beta$ and $s_\sigma$ are the prior standard deviations, and $\lambda_\tau$ is the prior exponential rate. Continuous tracks were partitioned into independent segments so that no interval exceeded 30 minutes. All segments of a given individual share that individuals movement parameters, allowing repeated segments to inform the same hierarchical random effects.
 
 Models were build in Stan ([Stan developement Team 2025](#ref-stan)) using the R package `cmdstanr` ([Gabry et al. 2025](#ref-cmdstanr)).
 

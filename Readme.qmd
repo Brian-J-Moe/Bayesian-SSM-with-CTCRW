@@ -39,7 +39,6 @@ library(knitr)
 
 Using a hierarchical Bayesian state-space model (BSSM) implementing a continuous-time correlated random walk (CTCRW), we can model the latent movement process as a function of velocity (speed and direction) through continuous time [@michelot_blackwell_2019; @michelot_etal_2019]. The CTCRW model assumes velocities over a given time interval are correlated to the that of the previous time interval. In other words, speed and directional movement tend to persist through time. The velocity process is governed by a velocity autocorrelation decay rate which defines how quickly autocorrelation decays over time and a velocity diffusion coefficient which describes the spread of velocity around the global velocity mean (which is assumed to be zero).
 
-
 ### Process model
 
 The velocity model for individual $i$ follows an Orstein-Ulenbeck process with an additive drift force:
@@ -54,7 +53,6 @@ $$
 dX_i(t)=V_i(t)dt
 $$ {#eq-position}
 
-
 ### Drift specification
 
 The drift force comprises three additive components representing behavioral thermoregulation, depth preference, and creek refuge attraction:
@@ -62,7 +60,6 @@ The drift force comprises three additive components representing behavioral ther
 $$
 f(\textbf{x}, t) = f_{temp} + f_{depth} + f_{creek}
 $$ {#eq-drift}
-
 
 #### *Thermal restoring force*
 
@@ -72,8 +69,7 @@ $$
 f_{temp} = \alpha\left(T_{opt} - T(\textbf{x},t) \right) \cdot \nabla T(\textbf{x}, t)
 $$ {#eq-tempf}
 
-where $\alpha$ is the strength of the thermoregulatory response, $T_{opt}$ is the temperature at which no thermal drift occurs, and $\nabla T(\textbf{x}, t)$ is the spatiotemporal temperature gradient. Temperature gradients were estimated by building temperature maps from the means of hourly recorded temperatures at each receiver. Temperatures at points between receivers were interpolated using the Kriging method with the `gstat` R package [@gstat].
-
+where $T(\textbf{x},t)$ is the temperature at position $\mathbf{x}$ and time $t$, $\alpha$ is the strength of the thermoregulatory response, $T_{opt}$ is the temperature at which no thermal drift occurs, and $\nabla T(\textbf{x}, t)$ is the spatiotemporal temperature gradient. Temperature gradients were estimated by building temperature maps from the means of hourly recorded temperatures at each receiver. Temperatures at points between receivers were interpolated using the Kriging method with the `gstat` R package [@gstat].
 
 #### *Depth restoring force with ontogenetic shift*
 
@@ -91,7 +87,6 @@ where $\omega$ is the strength of depth-seeking behavior, $D(\textbf{x}, t)$ is 
 
 The bathymetric surface map downloaded from the National Ocean and Atmospheric Administration Digital Coast database. We use the Nation Center for Environmental Information continuously updated digital elevation model (CUDEM) which mapped the bathymetric surface at a ninth arch-second resolution (3m) [@cudem; @cudem_data]. To account for uncertainty of animal positions and the prediction error of the GAM used to estimate animal HPEm, the bathymetric surface was smoothed to a 5m resolution using a Gaussian kernel. Spatial depth gradients were calculated using the finite differences method with the R package `terra` [@terra].
 
-
 #### *Creek refuge attraction with size-dependent decay*
 
 Glover Bight Creek acts as a refuge from bull shark predation for yoy and small individuals. Attraction to the creek refuge was modeled as a length-dependent logistic decay:
@@ -106,12 +101,72 @@ $$ {#eq-creekLogis}
 
 where $\psi$ is the strength of creek attraction, $\nabla\tilde{C}(\text{x})$ is the gradient of a softplus-clamped signed distance field pointing toward the creek interior, $\omega(L_t)$ is a logistic weight which decays with length $L_t$ at time $t$, $L_{50}$ is the length at which creek affinity halves (the inflection of the curve), and $\kappa_c$ describes the steepness of the transition. The signed distance field was clamped using a softplus transformation $\tilde{C} = k^{-1}\text{ln}(1+e^{kC})$ to prevent inward drift for animals already inside the creek.
 
-
 ### Discrete-time state transition
+
+The state vector can be defined as $\textbf{z}_t = [x_t, v_t]$ where $x_t$ and $v_t$ are the position and velocity at time $t$. The continuous-time process was integrated over the intervals $\Delta (t)$ to estimate the state vector at time $t+1$ so that:
+
+$$
+\textbf{z}_{t+1} = \textbf{A}(\Delta t)\textbf{z}_t + \textbf{B}(\Delta t)\textbf{z}_t + \eta_t
+$$ {#eq-transition}
+
+$$
+\textbf{A} = 
+\begin{bmatrix}
+1 & a \\
+0 & b
+\end{bmatrix}
+, \quad
+\textbf{B} = 
+\begin{bmatrix}
+c \\ a
+\end{bmatrix}
+$$ {#eq-trans_matrices}
+
+with
+
+$$
+a = \frac{1-e^{-\beta \Delta t}}{\beta}, \quad 
+b = e^{-\beta \Delta t}, \quad 
+c = \frac{\beta \Delta t + e^{-\beta \Delta t} - 1}{\beta^2}
+$$ {#eq-trans_inputs}
+
+and the process noise $\eta_t \sim \mathcal{N}(0, \textbf{Q}(\Delta t))$. The process noise covariance matrix $\textbf{Q}(\Delta t)$ is defined as:
+
+$$
+\mathbf{Q}\Delta t = 
+\begin{bmatrix}
+Q_{11} & Q_{12} \\
+Q_{21} & Q_{22}
+\end{bmatrix},
+$$ {#eq-process_cov}
+
+$$ 
+Q_{22} = \frac{\sigma^2}{2\beta} \left(1 - e^{-2\beta \Delta t} \right)
+$$ {#eq-velvar}
+
+$$
+Q_{12} = \frac{\sigma^2}{2 \beta^2} \left(1 - e^{-\beta \delta t} \right)^2
+$$ {#eq-cov}
+
+$$
+Q_{11} = \frac{\sigma^2}{\beta^3} \left( \beta \Delta t - 2 \left( 1-e^{-\beta \Delta t} \right) + \frac{1}{2} \left( 1-e^{-2\beta\Delta t} \right) \right)
+$$ {#eq-posvar}
+
+where $Q_{22}$ is the velocity process variance which is describes how much uncertainty in velocity accumulates over the interval $\Delta t$, $Q_{11}$ is the position process variance describing the effect velocity noise has on positional uncertainty, and $Q_{12}$ is the covariance between position and velocity diffusion.
+
+To estimate the positions and velocities of the latent states, Kalman filtering was used [@michelot_etal_2019].
+
+#### *Observation model* 
+
+The observed positions $y_t$ were estimated with error $\varepsilon_t$:
+
+$$
+y_t = x_t + \varepsilon_t, \quad \varepsilon_t \sim \mathcal{N}\left(0, \hat{h}_t^2 \right)
+$$ {#eq-obs} where $\hat{h}_t^2$ is the horizontal positional error predicted from a GAM of VPS system-state variables.
 
 #### *Hierarchical structure*
 
-To account for individual variation, we modeled the individual specific parameters $\beta_i$ and $\sigma_i$ hierarchically on the log scale:
+To account for between-individual variation, we modeled the individual specific parameters $\beta_i$ and $\sigma_i$ hierarchically on the log scale:
 
 $$
 \text{ln}\beta_i = \text{ln}\mu_\beta + \tau_\beta z_i^{(\beta)}, \quad z_i^{(\beta)} \sim \mathcal{N}(0, 1),
@@ -135,7 +190,7 @@ $$ $$
 \tau_\beta \sim \text{Exponential}(\lambda_\tau), \quad \tau_\sigma \sim \text{Exponential}(\lambda_\tau).
 $$
 
-Where $\widetilde{\beta}$ and $\widetilde{\sigma}$ are the specified prior medians, $s_\beta$ and $s_\sigma$ are the prior standard deviations, and $\lambda_tau$ is the prior exponential rate. Continuous tracks were partitioned into independent segments based on intervals longer than 30 minutes. All segments of a given individual share that individuals movement parameters, allowing repeated segments to inform the same hierarchical random effects.
+Where $\widetilde{\beta}$ and $\widetilde{\sigma}$ are the specified prior medians, $s_\beta$ and $s_\sigma$ are the prior standard deviations, and $\lambda_\tau$ is the prior exponential rate. Continuous tracks were partitioned into independent segments so that no interval exceeded 30 minutes. All segments of a given individual share that individuals movement parameters, allowing repeated segments to inform the same hierarchical random effects.
 
 Models were build in Stan [@stan] using the R package `cmdstanr` [@cmdstanr].
 
