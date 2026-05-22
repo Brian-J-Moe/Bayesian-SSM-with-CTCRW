@@ -14,11 +14,13 @@ g(\text{ln}(HPEm)) = s(\text{ln}(HPE)) + s(\text{ln1p}(RMSE)) + te(\text{ln}(R_{
  \qquad(1)$$</span>
 
 $$
-te(\text{ln1p}(\widetilde{HPEm}_{sys}), nR_{5m \epsilon}) + te(Day_{julian}, Hour) + ti(\text{ln}(HPE), Day_{julian}) + ti(\text{ln}(R_{noise}), Day_{julian}) + 
+te(\text{ln1p}(\widetilde{HPEm}_{sys}), nR_{5m \epsilon}) + te(Day_{julian}, Hour) + ti(\text{ln}(HPE), Day_{julian}) +  
 $$
 
 $$
-ti(\text{ln1p}(\widetilde{HPEm}_{sys}), Day_{julian}) + ti(\text{ln1p}(RMSE), Hour) + ti(\text{ln}(R_{noise}), Hour) + ti(\text{ln1p}(RMSE), \text{ln}(R_{noise}))
+ti(\text{ln}(R_{noise}), Day_{julian}) + ti(\text{ln1p}(\widetilde{HPEm}_{sys}), Day_{julian}) + ti(\text{ln1p}(RMSE), Hour) +
+$$ $$
+ti(\text{ln}(R_{noise}), Hour) + ti(\text{ln1p}(RMSE), \text{ln}(R_{noise}))
 $$
 
 where $RMSE$ is the root mean square error of the detection times between receivers for a given positional estimate, $R_{noise}$ and $R_{temp}$ are the mean hourly noise and temperature recorded across receivers used for a given positional estimate, $\widetilde{HPEm}_{sys}$ is the median hourly HPEm across all positional estimates, $nR_{5m\epsilon}$ is the number of positional estimates with an HPEm \> 5m for a given hour, $Day_{julian}$ is the Julian calender day, and $Hour$ is the hour of the day. A factor smooth spline was used for the smooth on $nR_{5m\epsilon}$, a cyclic cubic regression spline was used for the $Hour$ smooth, and cubic regression splines were used for the remaining smooths.
