@@ -11,11 +11,17 @@ Given the shallow nature and overall noise of the system, the dimensionless hori
 
 <span id="eq-gam">$$
 g(\text{ln}(HPEm)) = s(\text{ln}(HPE)) + s(\text{ln1p}(RMSE)) + te(\text{ln}(R_{noise}), \text{ln}(R_{temp})) + 
- \qquad(1)$$</span> $$
+ \qquad(1)$$</span>
+
+$$
 te(\text{ln1p}(\widetilde{HPEm}_{sys}), nR_{5m \epsilon}) + te(Day_{julian}, Hour) + ti(\text{ln}(HPE), Day_{julian}) +  
-$$ $$
+$$
+
+$$
 ti(\text{ln}(R_{noise}), Day_{julian}) + ti(\text{ln1p}(\widetilde{HPEm}_{sys}), Day_{julian}) + ti(\text{ln1p}(RMSE), Hour) +
-$$ $$
+$$
+
+$$
 ti(\text{ln}(R_{noise}), Hour) + ti(\text{ln1p}(RMSE), \text{ln}(R_{noise}))
 $$
 
