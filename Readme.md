@@ -18,7 +18,7 @@ te(\text{ln1p}(\widetilde{HPEm}_{sys}), nR_{5m \epsilon}) + te(Day_{julian}, Hou
 $$
 
 $$
-ti(\text{ln}(R_{noise}), Day_{julian}) + ti(\text{ln1p}(\widetilde{HPEm}_{sys}), Day_{julian}) + ti(\text{ln1p}(RMSE), Hour) +
+ti(\text{ln}(R_{noise}), Day_{julian}) + ti(\text{ln1p}(HPEm_{sys}), Day_{julian}) + ti(\text{ln1p}(RMSE), Hour) +
 $$
 
 $$
