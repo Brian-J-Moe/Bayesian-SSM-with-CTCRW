@@ -9,11 +9,23 @@
 
 Given the shallow nature and overall noise of the system, the dimensionless horizontal positional error (HPE) was poorly correlated with the observed error in meters (HPEm) of the estimated positions of fixed spatial reference tags. Therefore, the estimated HPE of animal positions was unreliable for evaluating data quality. Instead a generalized additive model incorporating system-state variables was used to predict the HPEm of animal positions:
 
-\$\$ g((HPEm)) = s((HPE)) + s((RMSE)) + te((R\_{noise}), (R\_{temp})) + te((*{sys}), nR*{5m }) + \\
+\$\$
+
+g((HPEm)) = s((HPE)) + s((RMSE)) + te((R\_{noise}), (R\_{temp})) + te((*{sys}), nR*{5m }) + \\
 
 te(Day\_{julian}, Hour) + ti((HPE), Day\_{julian}) + ti((R\_{noise}), Day\_{julian}) + ti((*{sys}), Day*{julian}) + \\
 
-ti((RMSE), Hour) + ti((R\_{noise}), Hour) + ti((RMSE), (R\_{noise})) \$\$ {#eq-gam}
+ti((RMSE), Hour) + ti((R\_{noise}), Hour) + ti((RMSE), (R\_{noise}))
+
+\$\$ {#eq-gam}
+
+$$
+te(Day_{julian}, Hour) + ti(\text{ln}(HPE), Day_{julian}) + ti(\text{ln}(R_{noise}), Day_{julian}) + ti(\text{ln1p}(\widetilde{HPEm}_{sys}), Day_{julian}) +
+$$
+
+$$
+ti(\text{ln1p}(RMSE), Hour) + ti(\text{ln}(R_{noise}), Hour) + ti(\text{ln1p}(RMSE), \text{ln}(R_{noise}))
+$$
 
 where $RMSE$ is the root mean square error of the detection times between receivers for a given positional estimate, $R_{noise}$ and $R_{temp}$ are the mean hourly noise and temperature recorded across receivers used for a given positional estimate, $\widetilde{HPEm}_{sys}$ is the median hourly HPEm across all positional estimates, $nR_{5m\epsilon}$ is the number of positional estimates with an HPEm \> 5m for a given hour, $Day_{julian}$ is the Julian calender day, and $Hour$ is the hour of the day.
 
