@@ -5,7 +5,7 @@
 
 # *A Bayesian state-space continuous-time correlated random walk with environmental drivers and refuge attraction*
 
-## Estimating horizontal positional error
+## Estimating HPEm
 
 Given the shallow nature and overall noise of the system, the dimensionless horizontal positional error (HPE) of the estimated positions of fixed reference tags was a poor predictor of the actual error in meters (HPEm). Therefore, the estimated HPE values alone were unreliable for evaluating the quality of estimated animal positions. Instead a generalized additive model incorporating system-state variables was used to predict the true HPEm:
 
