@@ -9,18 +9,12 @@
 
 Given the shallow nature and overall noise of the system, the dimensionless horizontal positional error (HPE) was poorly correlated with the observed error in meters (HPEm) of the estimated positions of fixed spatial reference tags. Therefore, the estimated HPE of animal positions was unreliable for evaluating data quality. Instead a generalized additive model incorporating system-state variables was used to predict the HPEm of animal positions:
 
-\$\$
-
-g((HPEm)) = s((HPE)) + s((RMSE)) + te((R\_{noise}), (R\_{temp})) + te((*{sys}), nR*{5m }) + \\
-
-te(Day\_{julian}, Hour) + ti((HPE), Day\_{julian}) + ti((R\_{noise}), Day\_{julian}) + ti((*{sys}), Day*{julian}) + \\
-
-ti((RMSE), Hour) + ti((R\_{noise}), Hour) + ti((RMSE), (R\_{noise}))
-
-\$\$ {#eq-gam}
+<span id="eq-gam">$$
+g(\text{ln}(HPEm)) = s(\text{ln}(HPE)) + s(\text{ln1p}(RMSE)) + te(\text{ln}(R_{noise}), \text{ln}(R_{temp})) + te(\text{ln1p}(\widetilde{HPEm}_{sys}), nR_{5m \epsilon}) +
+ \qquad(1)$$</span>
 
 $$
-te(Day_{julian}, Hour) + ti(\text{ln}(HPE), Day_{julian}) + ti(\text{ln}(R_{noise}), Day_{julian}) + ti(\text{ln1p}(\widetilde{HPEm}_{sys}), Day_{julian}) +
+te(Day_{julian}, Hour) + ti(\text{ln}(HPE), Day_{julian}) + ti(\text{ln}(R_{noise}), Day_{julian}) + ti(\text{ln1p}(\widetilde{HPEm}_{sys}), Day_{julian}) + 
 $$
 
 $$
@@ -41,13 +35,13 @@ The velocity model for individual $i$ follows an Orstein-Ulenbeck process with a
 
 <span id="eq-process">$$
 dV_i(t) = \left[-\beta_iV_i(t) + f(\textbf{x}, t)\right]dt + \sigma_idW(t)
- \qquad(1)$$</span>
+ \qquad(2)$$</span>
 
 where $V_i(t)$ is the velocity of individual $i$ at time $t$, $\beta_i$ is the velocity autocorrelation decay rate, $\sigma_i$ is the velocity diffusion coefficient, $W(t)$ is the standard Weiner process, and $f(\textbf{x}, t)$ is a position- and time-dependent drift force. From this, position changes as:
 
 <span id="eq-position">$$
 dX_i(t)=V_i(t)dt
- \qquad(2)$$</span>
+ \qquad(3)$$</span>
 
 ### Drift specification
 
@@ -55,7 +49,7 @@ The drift force comprises three additive components representing behavioral ther
 
 <span id="eq-drift">$$
 f(\textbf{x}, t) = f_{temp} + f_{depth} + f_{creek}
- \qquad(3)$$</span>
+ \qquad(4)$$</span>
 
 #### *Thermal restoring force*
 
@@ -63,7 +57,7 @@ The thermal drift force was was modeled as a bidirectional restoring force:
 
 <span id="eq-tempf">$$
 f_{temp} = \alpha\left(T_{opt} - T(\textbf{x},t) \right) \cdot \nabla T(\textbf{x}, t)
- \qquad(4)$$</span>
+ \qquad(5)$$</span>
 
 where $T(\textbf{x},t)$ is the temperature at position $\mathbf{x}$ and time $t$, $\alpha$ is the strength of the thermoregulatory response, $T_{opt}$ is the temperature at which no thermal drift occurs, and $\nabla T(\textbf{x}, t)$ is the spatiotemporal temperature gradient. Temperature gradients were estimated by building temperature maps from the means of hourly recorded temperatures at each receiver. Temperatures at points between receivers were interpolated using the Kriging method with the `gstat` R package ([Gräler et al. 2016](#ref-gstat)).
 
@@ -73,11 +67,11 @@ The depth drift was modeled as a restoring force with ontogenetic shift:
 
 <span id="eq-depthf">$$
 f_{depth} = \omega (D_{pref}(age_t)-D(\textbf{x}, t)) \cdot \nabla D(\textbf{x})
- \qquad(5)$$</span>
+ \qquad(6)$$</span>
 
 <span id="eq-depthpref">$$
 D_{pref}(age_t) = d_\infty - (d_\infty - d_0) e^{-\kappa_d age_i}
- \qquad(6)$$</span>
+ \qquad(7)$$</span>
 
 where $\omega$ is the strength of depth-seeking behavior, $D(\textbf{x}, t)$ is the tidally-adjusted water depth at position $\textbf{x}$ and time $t$, $\nabla D(\textbf{x})$ is the spatial gradient of the bathymetric surface, $D_{pref}(age_t)$ is the age-dependent depth preference, $d_0$ is the depth preference of neonatal individuals, $d_\infty$ is the asymptotic depth preference of large juveniles and adults within the Glover Bight system, $\kappa_d$ is the rate of change of ontogenetic depth preference, and $age_t$ is the estimated age at time $t$ .
 
@@ -89,11 +83,11 @@ Glover Bight Creek acts as a refuge from bull shark predation for yoy and small 
 
 <span id="eq-creekf">$$
 f_{creek} = \psi \cdot \omega(L_t) \cdot \nabla\tilde{C}(\text{x}),
- \qquad(7)$$</span>
+ \qquad(8)$$</span>
 
 <span id="eq-creekLogis">$$
 \omega (L_t) = \frac{1}{1 + \text{exp}[\kappa_c(L_t - L_{50})]}
- \qquad(8)$$</span>
+ \qquad(9)$$</span>
 
 where $\psi$ is the strength of creek attraction, $\nabla\tilde{C}(\text{x})$ is the gradient of a softplus-clamped signed distance field pointing toward the creek interior, $\omega(L_t)$ is a logistic weight which decays with length $L_t$ at time $t$, $L_{50}$ is the length at which creek affinity halves (the inflection of the curve), and $\kappa_c$ describes the steepness of the transition. The signed distance field was clamped using a softplus transformation $\tilde{C} = k^{-1}\text{ln}(1+e^{kC})$ to prevent inward drift for animals already inside the creek.
 
@@ -103,7 +97,7 @@ The state vector can be defined as $\textbf{z}_t = [x_t, v_t]$ where $x_t$ and $
 
 <span id="eq-transition">$$
 \textbf{z}_{t+1} = \textbf{A}(\Delta t)\textbf{z}_t + \textbf{B}(\Delta t)\textbf{z}_t + \eta_t
- \qquad(9)$$</span>
+ \qquad(10)$$</span>
 
 <span id="eq-trans_matrices">$$
 \textbf{A} = 
@@ -116,7 +110,7 @@ The state vector can be defined as $\textbf{z}_t = [x_t, v_t]$ where $x_t$ and $
 \begin{bmatrix}
 c \\ a
 \end{bmatrix}
- \qquad(10)$$</span>
+ \qquad(11)$$</span>
 
 with
 
@@ -124,7 +118,7 @@ with
 a = \frac{1-e^{-\beta \Delta t}}{\beta}, \quad 
 b = e^{-\beta \Delta t}, \quad 
 c = \frac{\beta \Delta t + e^{-\beta \Delta t} - 1}{\beta^2}
- \qquad(11)$$</span>
+ \qquad(12)$$</span>
 
 and the process noise $\eta_t \sim \mathcal{N}(0, \textbf{Q}(\Delta t))$. The process noise covariance matrix $\textbf{Q}(\Delta t)$ is defined as:
 
@@ -134,19 +128,19 @@ and the process noise $\eta_t \sim \mathcal{N}(0, \textbf{Q}(\Delta t))$. The pr
 Q_{11} & Q_{12} \\
 Q_{21} & Q_{22}
 \end{bmatrix},
- \qquad(12)$$</span>
+ \qquad(13)$$</span>
 
 <span id="eq-velvar">$$ 
 Q_{22} = \frac{\sigma^2}{2\beta} \left(1 - e^{-2\beta \Delta t} \right)
- \qquad(13)$$</span>
+ \qquad(14)$$</span>
 
 <span id="eq-cov">$$
 Q_{12} = \frac{\sigma^2}{2 \beta^2} \left(1 - e^{-\beta \delta t} \right)^2
- \qquad(14)$$</span>
+ \qquad(15)$$</span>
 
 <span id="eq-posvar">$$
 Q_{11} = \frac{\sigma^2}{\beta^3} \left( \beta \Delta t - 2 \left( 1-e^{-\beta \Delta t} \right) + \frac{1}{2} \left( 1-e^{-2\beta\Delta t} \right) \right)
- \qquad(15)$$</span>
+ \qquad(16)$$</span>
 
 where $Q_{22}$ is the velocity process variance which is describes how much uncertainty in velocity accumulates over the interval $\Delta t$, $Q_{11}$ is the position process variance describing the effect velocity noise has on positional uncertainty, and $Q_{12}$ is the covariance between position and velocity diffusion.
 
@@ -158,7 +152,7 @@ The observed positions $y_t$ were estimated with error $\varepsilon_t$:
 
 <span id="eq-obs">$$
 y_t = x_t + \varepsilon_t, \quad \varepsilon_t \sim \mathcal{N}\left(0, \hat{h}_t^2 \right)
- \qquad(16)$$</span>
+ \qquad(17)$$</span>
 
 where $\hat{h}_t^2$ is the estimated HPEm predicted from a GAM of VPS system-state variables.
 
@@ -168,11 +162,11 @@ To account for between-individual variation, we modeled the individual specific 
 
 <span id="eq-global_beta">$$
 \text{ln}\beta_i = \text{ln}\mu_\beta + \tau_\beta z_i^{(\beta)}, \quad z_i^{(\beta)} \sim \mathcal{N}(0, 1),
- \qquad(17)$$</span>
+ \qquad(18)$$</span>
 
 <span id="eq-global_sigma">$$
 \text{ln}\sigma_i = \text{ln}\mu_\sigma + \tau_\sigma z_i^{(\sigma)}, \quad z_i^{(\sigma)} \sim \mathcal{N}(0, 1).
- \qquad(18)$$</span>
+ \qquad(19)$$</span>
 
 Where $\mu_\beta$ and $\mu_\sigma$ are population level medians of $\beta_i$ and $\sigma_i$, respectively, and $\tau_\beta$ and $\tau_\sigma$ are among-individual standard deviations on the log scale.
 
