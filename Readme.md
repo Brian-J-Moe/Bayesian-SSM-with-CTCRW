@@ -19,7 +19,7 @@ g(\text{ln}(HPEm)) \quad = & \quad s(\text{ln}(HPE)) + s(\text{ln1p}(RMSE)) + te
 \end{aligned}
  \qquad(1)$$</span>
 
-where $RMSE$ is the root mean square error of the detection times between receivers for a given positional estimate, $R_{noise}$ and $R_{temp}$ are the mean hourly noise and temperature recorded across receivers used for a given positional estimate, $HPE_{sys}$ is the median HPEm across all positional estimates for a given hour, $nR_{5m\epsilon}$ is the number of positional estimates with a HPEm \> 5m for a given hour, $Day_{julian}$ is the Julian calender day, and $Hour$ is the hour of the day. A factor smooth spline was used for the smooth on $nR_{5m\epsilon}$, a cyclic cubic regression spline was used for the $Hour$ smooth, and cubic regression splines were used for the remaining smooths.
+where $RMSE$ is the root mean square error of the detection times between receivers for a given positional estimate, $R_{noise}$ and $R_{temp}$ are the mean hourly noise and temperature recorded across receivers used for a given positional estimate, $HPE_{sys}$ is the median HPEm across all positional estimates for a given hour, $nR_{5m\epsilon}$ is the number of positional estimates with a HPEm \> 5m for a given hour, $Day_{julian}$ is the Julian calender day, and $Hour$ is the hour of the day. A factor smooth spline was used for the smooth on $nR_{5m\epsilon}$, a cyclic cubic regression spline was used for the $Hour$ smooth, and cubic regression splines were used for the remaining smooths. The model was fit using a restricted maximum likelihood.
 
 K-fold spatial cross validation was used to assess the accuracy of predicted HPEm across six reference tags at three fixed stations (one V16 and one V13 tag per station).
 
