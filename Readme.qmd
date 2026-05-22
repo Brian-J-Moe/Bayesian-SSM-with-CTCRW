@@ -35,6 +35,18 @@ library(knitr)
 
 # *A Bayesian state-space continuous-time correlated random walk with environmental drivers and refuge attraction*
 
+## Estimating horizontal positional error
+
+Given the shallow nature and overall noise of the system, the dimensionless horizontal positional error (HPE) was poorly correlated with the observed error in meters (HPEm) of the estimated positions of fixed spatial reference tags. Therefore, the estimated HPE of animal positions was unreliable for evaluating data quality. Instead a generalized additive model incorporating system-state variables was used to predict the HPEm of animal positions:
+
+$$
+g(\text{ln}(HPEm)) = s(\text{ln}(HPE)) + s(\text{ln1p}(RMSE)) + te(\text{ln}(R_{noise}), \text{ln}(R_{temp})) + te(\text{ln1p}(\widetilde{HPEm}_{sys}), nR_{5m \epsilon}) + te(Day_{julian}, Hour) + ti(\text{ln}(HPE), Day_{julian}) + ti(\text{ln}(R_{noise}), Day_{julian}) + ti(\text{ln1p}(\widetilde{HPEm}_{sys}), Day_{julian}) + ti(\text{ln1p}(RMSE), Hour) + ti(\text{ln}(R_{noise}), Hour) + ti(\text{ln1p}(RMSE), \text{ln}(R_{noise}))
+$$ {#eq-gam}
+
+where $RMSE$ is the root mean square error of the detection times between receivers for a given positional estimate, $R_{noise}$ and $R_{temp}$ are the mean hourly noise and temperature recorded across receivers used for a given positional estimate, $\widetilde{HPEm}_{sys}$ is the median hourly HPEm across all positional estimates, $nR_{5m\epsilon}$ is the number of positional estimates with an HPEm > 5m for a given hour, $Day_{julian}$ is the Julian calender day, and $Hour$ is the hour of the day.
+
+K-fold spatial cross validation was used to assess the accuracy of predicted HPEm across six reference tags at three fixed stations (one V16 and one V13 tag per station).
+
 ## Movement model
 
 Using a hierarchical Bayesian state-space model (BSSM) implementing a continuous-time correlated random walk (CTCRW), we can model the latent movement process as a function of velocity (speed and direction) through continuous time [@michelot_blackwell_2019; @michelot_etal_2019]. The CTCRW model assumes velocities over a given time interval are correlated to the that of the previous time interval. In other words, speed and directional movement tend to persist through time. The velocity process is governed by a velocity autocorrelation decay rate which defines how quickly autocorrelation decays over time and a velocity diffusion coefficient which describes the spread of velocity around the global velocity mean (which is assumed to be zero).
@@ -85,7 +97,7 @@ $$ {#eq-depthpref}
 
 where $\omega$ is the strength of depth-seeking behavior, $D(\textbf{x}, t)$ is the tidally-adjusted water depth at position $\textbf{x}$ and time $t$, $\nabla D(\textbf{x})$ is the spatial gradient of the bathymetric surface, $D_{pref}(age_t)$ is the age-dependent depth preference, $d_0$ is the depth preference of neonatal individuals, $d_\infty$ is the asymptotic depth preference of large juveniles and adults within the Glover Bight system, $\kappa_d$ is the rate of change of ontogenetic depth preference, and $age_t$ is the estimated age at time $t$ .
 
-The bathymetric surface map was downloaded from the National Ocean and Atmospheric Administration Digital Coast database. We use the Nation Center for Environmental Information continuously updated digital elevation model (CUDEM) which mapped the bathymetric surface at a ninth arch-second resolution (3m) [@cudem; @cudem_data]. To account for uncertainty of animal positions and the prediction error of the GAM used to estimate animal HPEm, the bathymetric surface was smoothed to a 5m resolution using a Gaussian kernel. Spatial depth gradients were calculated using the finite differences method with the R package `terra` [@terra].
+The bathymetric surface map was downloaded from the National Ocean and Atmospheric Administration Digital Coast database. We use the Nation Center for Environmental Information continuously updated digital elevation model (CUDEM) which mapped the bathymetric surface at a ninth arch-second resolution (3m) [@cudem; @cudem_data]. To account for uncertainty of animal positions and the prediction error of the GAM used to estimate animal horizontal positioning error (HPEm), the bathymetric surface was smoothed to a 5m resolution using a Gaussian kernel. Spatial depth gradients were calculated using the finite differences method with the R package `terra` [@terra].
 
 #### *Creek refuge attraction with size-dependent decay*
 
@@ -164,7 +176,7 @@ $$
 y_t = x_t + \varepsilon_t, \quad \varepsilon_t \sim \mathcal{N}\left(0, \hat{h}_t^2 \right)
 $$ {#eq-obs} 
 
-where $\hat{h}_t^2$ is the horizontal positional error predicted from a GAM of VPS system-state variables.
+where $\hat{h}_t^2$ is the estimated HPEm predicted from a GAM of VPS system-state variables.
 
 #### *Hierarchical structure*
 
