@@ -7,7 +7,7 @@
 
 ## Estimating horizontal positional error
 
-Given the shallow nature and overall noise of the system, the dimensionless horizontal positional error (HPE) was poorly correlated with the observed error in meters (HPEm) of the estimated positions of fixed spatial reference tags. Therefore, the estimated HPE of animal positions was unreliable for evaluating data quality. Instead a generalized additive model incorporating system-state variables was used to predict the HPEm of animal positions:
+Given the shallow nature and overall noise of the system, the dimensionless horizontal positional error (HPE) of the estimated positions of fixed reference tags was a poor predictor of the actual error in meters (HPEm). Therefore, the estimated HPE values alone were unreliable for evaluating the quality of estimated animal positions. Instead a generalized additive model incorporating system-state variables was used to predict the true HPEm:
 
 <span id="eq-gam">$$
 g(\text{ln}(HPEm)) = s(\text{ln}(HPE)) + s(\text{ln1p}(RMSE)) + te(\text{ln}(R_{noise}), \text{ln}(R_{temp})) + 
