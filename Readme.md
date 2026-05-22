@@ -55,7 +55,7 @@ D_{pref}(age_t) = d_\infty - (d_\infty - d_0) e^{-\kappa_d age_i}
 
 where $\omega$ is the strength of depth-seeking behavior, $D(\textbf{x}, t)$ is the tidally-adjusted water depth at position $\textbf{x}$ and time $t$, $\nabla D(\textbf{x})$ is the spatial gradient of the bathymetric surface, $D_{pref}(age_t)$ is the age-dependent depth preference, $d_0$ is the depth preference of neonatal individuals, $d_\infty$ is the asymptotic depth preference of large juveniles and adults within the Glover Bight system, $\kappa_d$ is the rate of change of ontogenetic depth preference, and $age_t$ is the estimated age at time $t$ .
 
-The bathymetric surface map downloaded from the National Ocean and Atmospheric Administration Digital Coast database. We use the Nation Center for Environmental Information continuously updated digital elevation model (CUDEM) which mapped the bathymetric surface at a ninth arch-second resolution (3m) ([CIRES 2014](#ref-cudem_data); [Amante et al. 2023](#ref-cudem)). To account for uncertainty of animal positions and the prediction error of the GAM used to estimate animal HPEm, the bathymetric surface was smoothed to a 5m resolution using a Gaussian kernel. Spatial depth gradients were calculated using the finite differences method with the R package `terra` ([Hijmans et al. 2026](#ref-terra)).
+The bathymetric surface map was downloaded from the National Ocean and Atmospheric Administration Digital Coast database. We use the Nation Center for Environmental Information continuously updated digital elevation model (CUDEM) which mapped the bathymetric surface at a ninth arch-second resolution (3m) ([CIRES 2014](#ref-cudem_data); [Amante et al. 2023](#ref-cudem)). To account for uncertainty of animal positions and the prediction error of the GAM used to estimate animal HPEm, the bathymetric surface was smoothed to a 5m resolution using a Gaussian kernel. Spatial depth gradients were calculated using the finite differences method with the R package `terra` ([Hijmans et al. 2026](#ref-terra)).
 
 #### *Creek refuge attraction with size-dependent decay*
 
@@ -132,7 +132,9 @@ The observed positions $y_t$ were estimated with error $\varepsilon_t$:
 
 <span id="eq-obs">$$
 y_t = x_t + \varepsilon_t, \quad \varepsilon_t \sim \mathcal{N}\left(0, \hat{h}_t^2 \right)
- \qquad(16)$$</span> where $\hat{h}_t^2$ is the horizontal positional error predicted from a GAM of VPS system-state variables.
+ \qquad(16)$$</span>
+
+where $\hat{h}_t^2$ is the horizontal positional error predicted from a GAM of VPS system-state variables.
 
 #### *Hierarchical structure*
 
