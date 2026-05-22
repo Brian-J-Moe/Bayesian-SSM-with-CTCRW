@@ -44,7 +44,7 @@ g(\text{ln}(HPEm)) = s(\text{ln}(HPE)) + s(\text{ln1p}(RMSE)) + te(\text{ln}(R_{
 $$ {#eq-gam}
 
 $$
-te(\text{ln1p}(\widetilde{HPEm}_{sys}), nR_{5m \epsilon}) + te(Day_{julian}, Hour) + ti(\text{ln}(HPE), Day_{julian}) +  
+te(\text{ln1p}(HPEm_{sys}), nR_{5m \epsilon}) + te(Day_{julian}, Hour) + ti(\text{ln}(HPE), Day_{julian}) +  
 $$
 
 $$
